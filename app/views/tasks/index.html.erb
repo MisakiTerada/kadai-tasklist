@@ -2,9 +2,7 @@
 
 <ul>
   <% @tasks.each do |task| %>
-  <!--link_to 表示文字列, リンク先-->
-  <!--リンク先としてインスタンス（レコード）を渡すと、自動的にそのインスタンスの show アクションへとリンクされる-->
-    <li><%= link_to task.id, task %> : <%= task.content %></li>
+    <li><%= link_to task.id, task %> : <%= task.status %> &gt; <%= task.content %></li>
   <% end %>
 </ul>
 
