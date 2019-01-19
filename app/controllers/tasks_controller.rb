@@ -3,7 +3,7 @@ class TasksController < ApplicationController
   
   # ルーティングと同じ名前のメソッド名として定義すれば、対応させられるためまず、7つのアクションを全て対応させた
   def index
-    @tasks = Task.all
+    @tasks = Task.all.page(params[:page]).per(10)
   end
 
   def show
