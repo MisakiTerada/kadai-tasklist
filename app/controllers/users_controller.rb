@@ -7,6 +7,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @contents = @user.contents.order("created_at DESC").page(params[:page])
+    counts(@user)
   end
 
   def new
@@ -21,7 +23,7 @@ class UsersController < ApplicationController
       redirect_to @user
     else
       flash.now[:danger]="ユーザの登録に失敗しました。"
-      render.new
+      render :new
     end
   end
   

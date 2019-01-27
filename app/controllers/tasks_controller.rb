@@ -3,7 +3,11 @@ class TasksController < ApplicationController
   
   # ルーティングと同じ名前のメソッド名として定義すれば、対応させられるためまず、7つのアクションを全て対応させた
   def index
-    @tasks = Task.all.page(params[:page]).per(10)
+    if logged_in?
+      @content = current_user.contents.build
+      @contents = current_user.contents.order('created_at DESC').page(params[:page])
+      # @tasks = Task.all.page(params[:page]).per(10)
+    end
   end
 
   def show
