@@ -6,7 +6,7 @@ class TasksController < ApplicationController
     if logged_in?
       @content = current_user.contents.build
       @contents = current_user.contents.order('created_at DESC').page(params[:page])
-      # @tasks = Task.all.page(params[:page]).per(10)
+      @tasks = Task.all.page(params[:page]).per(10)
     end
   end
 
