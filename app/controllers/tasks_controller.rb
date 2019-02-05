@@ -1,11 +1,13 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :require_user_logged_in
+  before_action :correct_user, only: [:show,:destroy]
+  before_action :set_task, only: [:show, :edit, :update]
   
   # ルーティングと同じ名前のメソッド名として定義すれば、対応させられるためまず、7つのアクションを全て対応させた
   def index
     if logged_in?
-      @content = current_user.contents.build
-      @contents = current_user.contents.order('created_at DESC').page(params[:page])
+      @task = current_user.tasks.build
+      @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
       @tasks = Task.all.page(params[:page]).per(10)
     end
   end
@@ -18,7 +20,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = current_user.tasks.build(task_params)
 
     if @task.save
       flash[:success] = 'Task が正常に投稿されました'
@@ -46,7 +48,7 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     flash[:success] = 'このTaskは正常に削除されました'
-    redirect_to tasks_url
+    redirect_back(fallback_location: root_path)
   end
   
   private
@@ -54,11 +56,17 @@ class TasksController < ApplicationController
  def set_task
     @task=Task.find(params[:id])
   end
-
+  
  def task_params
     params.require(:task).permit(:content,:status)
   end
   
+  def correct_user
+    @task = current_user.tasks.find_by(id: params[:id])
+    unless @task
+      redirect_to root_url
+    end
+  end
 end
 
   
